@@ -1,0 +1,31 @@
+{
+  "name": "iflow-plotter",
+  "version": "1.0.3",
+  "description": "A small CLI tool to plot/print SAP CPI iflow diagrams to PNG/SVG format.",
+  "main": "index.js",
+  "scripts": {
+	"start": "node ./cli.js --help",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "SAP",
+    "CPI",
+    "Cloud",
+    "Integration",
+    "IFlow"
+  ],
+  "author": "Raffael Herrmann",
+  "license": "MIT",
+  "bin": {
+    "iflow-plotter": "./cli.js"
+  },
+  "dependencies": {
+    "adm-zip": "^0.5.5",
+    "bpmn-to-image": "^0.6.0",
+    "chalk": "^4.1.1",
+    "path": "^0.12.7",
+    "puppeteer": "^8.0.0",
+    "xml2js": "^0.4.23",
+    "yargs": "^16.2.0"
+  }
+}
