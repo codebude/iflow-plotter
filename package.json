@@ -1,6 +1,6 @@
 {
   "name": "iflow-plotter",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A small CLI tool to plot/print SAP CPI iflow diagrams to PNG/SVG format.",
   "main": "index.js",
   "scripts": {

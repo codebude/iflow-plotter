@@ -14,7 +14,7 @@ Open a terminal and run the `iflow-plotter` command. The following info (taken f
     Plot IFlow diagram to file
     
     Conversion parameters:
-      -f, --format        Target format(s). One of: pdf,png,svg.
+      -f, --format        Target format(s). One of: pdf,png,svg,bpmn.
                                               [array] [default: ["pdf","svg","png"]]
       -s, --scale-factor  Scale of rendered diagram            [number] [default: 1]
       -o, --output-dir    Output directory                   [string] [default: "."]

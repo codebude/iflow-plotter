@@ -11,7 +11,7 @@ require('yargs')
 	  group: 'Conversion parameters:',
 	  //choices: ['pdf','svg','png'],
       default: ['pdf','svg','png'],
-      describe: 'Target format(s). One of: pdf,png,svg.'
+      describe: 'Target format(s). One of: pdf,png,svg,bpmn.'
     })
 	yargs.option('scale-factor', {
       type: 'number',

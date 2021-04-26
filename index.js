@@ -73,7 +73,6 @@ async function renderDiagram(diagPath, diagName, targetFormats, scaleFactor, out
 	fs.unlinkSync(diagPath)
 }
 
-
 async function plotIFlow(iFlowZipFile, targetFormats, scaleFactor, outputDir, debugFlag){	
 	debug = !(debugFlag === undefined) && debugFlag != false
 	dbg(debugFlag, "$debugFlag")
@@ -86,8 +85,8 @@ async function plotIFlow(iFlowZipFile, targetFormats, scaleFactor, outputDir, de
 		//Read .project file
 		log("Parsing .project file...")
 		var pFileContent = flowFile.readAsText(flowFile.getEntry(".project"))	
-		xml2js.parseString(pFileContent, function(err, result) {
-			if (err) err(err)
+		xml2js.parseString(pFileContent, function(ex, result) {
+			if (ex) err(ex)
 			iflowInfo.name = result.projectDescription.name[0]
 			log(`Found IFlow with name: ${iflowInfo.name}`)
 		})
@@ -110,8 +109,8 @@ async function plotIFlow(iFlowZipFile, targetFormats, scaleFactor, outputDir, de
 		//Patch XMLDocument and render
 		log("Patching SAP BPMN diagrams...")	
 		iflowInfo.diagrams.forEach(diag => {
-			xml2js.parseString(diag.content, function(err, result) {
-				if (err) err(err)
+			xml2js.parseString(diag.content, function(ex, result) {
+				if (ex) err(ex)
 				var json = result
 				var res = findNode(json, "bpmn2:subProcess")
 								
@@ -122,9 +121,9 @@ async function plotIFlow(iFlowZipFile, targetFormats, scaleFactor, outputDir, de
 					dbg(sp[0].$.name, "Subprocess Name")
 					
 					//...find the matching BPMN shape via its id...
-					var shape = findNode(json, "bpmndi:BPMNShape")[0].find(shape => { 						
+					var shape = findNode(json, "bpmndi:BPMNShape")[0].find(shape => {
 						return shape.$.bpmnElement == sid
-					})					
+					})
 					//...and expand shape (=subprocess)
 					shape.$['isExpanded'] = true
 					dbg(JSON.stringify(shape, null, 2), "Patched shape")
@@ -135,13 +134,23 @@ async function plotIFlow(iFlowZipFile, targetFormats, scaleFactor, outputDir, de
 				var xml = builder.buildObject(json);
 
 				const tmpDiagName = `${diag.filename}.patched`
-				fs.writeFile(tmpDiagName, xml, function(err, data) {
-				  if (err) err(err)
+				fs.writeFile(tmpDiagName, xml, function(ex, data) {
+				  if (ex) err(ex)
 				  log("Successfully written patched diagram to file")
 				});
 				
+				if (targetFormats.includes("bpmn")){
+					log("Write out BPMN format")					
+					let outPath = path.join(outputDir,`${diag.name}.bpmn`)
+					dbg(outPath, "outPath")	
+					fs.writeFile(outPath, xml, function(ex, data) {
+					  if (ex) err(ex)
+					  log(`Wrote BPMN.io compatible XML to: ${outPath}`)
+					});					
+				}
+				
 				log("Start rendering")
-				renderDiagram(tmpDiagName, diag.name, targetFormats, scaleFactor, outputDir)
+				renderDiagram(tmpDiagName, diag.name, targetFormats.filter(f =>  f != "bpmn"), scaleFactor, outputDir)
 			});
 		});
 	} catch (ex){
